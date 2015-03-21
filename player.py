@@ -144,7 +144,7 @@ class Player():
                         bet = all_in_value
 
                 if not did_somebody_raise:
-                    bet = minimum_raise + 1
+                    bet = minimum_raise * 2 + 1
 
             else:
                 #out_player_count =
