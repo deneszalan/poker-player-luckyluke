@@ -1,5 +1,5 @@
 
-CARDS = ['2', '3', '4', '5', '6', '7', '8', '9', 'J', 'D', 'K', 'A']
+STRAIGHT_CARDS = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
 
 class Player:
     VERSION = "All-in 1"
@@ -52,8 +52,8 @@ class Player:
 
     def hasStraight(self, cards):
         for j in range(len(cards)-4):
-            i = CARDS.index(cards[j]["rank"])
-            straight = CARDS[i:i+5]
+            i = STRAIGHT_CARDS.index(cards[j]["rank"])
+            straight = STRAIGHT_CARDS[i:i+5]
             if cards[j:j+5] == straight:
                 return True
         return False
