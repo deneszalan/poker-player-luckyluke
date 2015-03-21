@@ -1,7 +1,9 @@
+#!/usr/bin/env python
+from ranking import Ranking
 
 STRAIGHT_CARDS = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
 
-class Player:
+class Player():
     VERSION = "All-in 1"
 
     def anyCardRankEqual(self, cards, rank):
@@ -65,19 +67,26 @@ class Player:
         return 0
 
     def betRequest(self, game_state):
-        # print "Hello"
-       
-        me = game_state["players"][game_state["in_action"]]
-        mycards = me["hole_cards"]
+        bet = 0
+        myself = game_state["players"][game_state["in_action"]]
+        my_cards = myself["hole_cards"]
 
-        # print me
-        # print mycards
-        if self.isPair(mycards) or \
-                (mycards[0]["suit"]==mycards[1]["suit"] and (self.anyCardRankEqual(mycards, 'A') or self.anyCardRankEqual(mycards, 'K'))):
-            return int(me.stack)
+        ranking = Ranking(my_cards)
+        chen_ranking = ranking.get_chen_ranking()
 
-        return 0
+        is_preflop = len(game_state["community_cards"]) == 0
+
+        if is_preflop:
+            if chen_ranking >= 5.5:
+                bet = myself["stack"]
+        else:
+            bet = max(100, int(game_state["minimum_raise"]))
+
+        return int(bet)
+
 
     def showdown(self, game_state):
         pass
 
+if __name__ == "__main__":
+    pass
