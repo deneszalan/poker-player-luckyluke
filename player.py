@@ -43,14 +43,14 @@ class Player():
                     if chen_ranking >= 6:
                         bet = all_in_value
 
-                did_somebody_raise = minimum_raise >= small_blind * 3
+                if bet != all_in_value:
+                    did_somebody_raise = minimum_raise >= small_blind * 2
 
-                if minimum_raise > small_blind*8:
-                    if chen_ranking >= 7.5:
-                        bet = all_in_value
+                    if not did_somebody_raise:
+                        bet = minimum_raise * 2
 
-                if not did_somebody_raise:
-                    bet = minimum_raise * 2
+                if minimum_raise > small_blind*8 and chen_ranking >= 7.5:
+                    bet = all_in_value
 
             else:
                 TWO_PAIRS = 2
