@@ -1,6 +1,7 @@
 __author__ = 'salacz'
 
 from player import Player
+from ranking import Ranking
 import unittest
 
 class RankSuite(unittest.TestCase):
@@ -91,13 +92,12 @@ class RankSuite(unittest.TestCase):
                                                  "suit": "clubs"
                                              }
         ]
-        p=Player()
-        ranks, suits = p.getCardSorts(cards)
-        self.assertTrue(p.hasPair(ranks))
-        self.assertTrue(p.hasTwoPairs(ranks))
-        self.assertFalse(p.hasDrill(ranks))
-        self.assertFalse(p.hasFull(ranks))
-        self.assertFalse(p.hasPoker(ranks))
+        r=Ranking(cards)
+        self.assertTrue(r.hasPair())
+        self.assertTrue(r.hasTwoPairs())
+        self.assertFalse(r.hasDrill())
+        self.assertFalse(r.hasFull())
+        self.assertFalse(r.hasPoker())
 
     def testDrill(self):
         cards = [
@@ -122,13 +122,12 @@ class RankSuite(unittest.TestCase):
                                                  "suit": "clubs"
                                              }
         ]
-        p=Player()
-        ranks, suits = p.getCardSorts(cards)
-        self.assertTrue(p.hasPair(ranks))
-        self.assertFalse(p.hasTwoPairs(ranks))
-        self.assertTrue(p.hasDrill(ranks))
-        self.assertTrue(p.hasFull(ranks))
-        self.assertFalse(p.hasPoker(ranks))
+        r=Ranking(cards)
+        self.assertTrue(r.hasPair())
+        self.assertFalse(r.hasTwoPairs())
+        self.assertTrue(r.hasDrill())
+        self.assertTrue(r.hasFull())
+        self.assertFalse(r.hasPoker())
 
     def testPoker(self):
         cards = [
@@ -153,13 +152,42 @@ class RankSuite(unittest.TestCase):
                                                  "suit": "clubs"
                                              }
         ]
-        p=Player()
-        ranks, suits = p.getCardSorts(cards)
-        self.assertFalse(p.hasPair(ranks))
-        self.assertFalse(p.hasTwoPairs(ranks))
-        self.assertFalse(p.hasDrill(ranks))
-        self.assertFalse(p.hasFull(ranks))
-        self.assertTrue(p.hasPoker(ranks))
+        r=Ranking(cards)
+        self.assertFalse(r.hasPair())
+        self.assertFalse(r.hasTwoPairs())
+        self.assertFalse(r.hasDrill())
+        self.assertFalse(r.hasFull())
+        self.assertTrue(r.hasPoker())
+
+    def testFlush(self):
+        cards1 = [
+                                             {
+                                                 "rank": "5",
+                                                 "suit": "diamonds"
+                                             },
+                                             {
+                                                 "rank": "2",
+                                                 "suit": "diamonds"
+                                             },
+                                             {
+                                                 "rank": "7",
+                                                 "suit": "diamonds"
+                                             },
+                                             {
+                                                 "rank": "8",
+                                                 "suit": "clubs"
+                                             },
+                                             {
+                                                 "rank": "8",
+                                                 "suit": "diamonds"
+                                             },
+                                             {
+                                                 "rank": "J",
+                                                 "suit": "diamonds"
+                                             }
+        ]
+        r=Ranking(cards1)
+        self.assertTrue(r.hasFlush())
 
     def testStraight(self):
         cards1 = [
@@ -184,8 +212,8 @@ class RankSuite(unittest.TestCase):
                                                  "suit": "clubs"
                                              }
         ]
-        p=Player()
-        self.assertFalse(p.hasStraight(cards1))
+        r=Ranking(cards1)
+        self.assertFalse(r.hasStraight())
         cards2 = [
                                              {
                                                  "rank": "8",
@@ -208,7 +236,8 @@ class RankSuite(unittest.TestCase):
                                                  "suit": "clubs"
                                              }
         ]
-        self.assertTrue(p.hasStraight(cards2))
+        r=Ranking(cards2)
+        self.assertTrue(r.hasStraight())
         cards3 = [
                                              {
                                                  "rank": "6",
@@ -235,8 +264,9 @@ class RankSuite(unittest.TestCase):
                                                  "suit": "clubs"
                                              }
         ]
-        self.assertTrue(p.hasStraight(cards3))
-        cards3 = [
+        r=Ranking(cards3)
+        self.assertTrue(r.hasStraight())
+        cards4 = [
                                              {
                                                  "rank": "K",
                                                  "suit": "clubs"
@@ -262,11 +292,215 @@ class RankSuite(unittest.TestCase):
                                                  "suit": "clubs"
                                              }
         ]
-        self.assertTrue(p.hasStraight(cards3))
+        r=Ranking(cards4)
+        self.assertTrue(r.hasStraight())
 
     def testRanking(self):
-        p=Player()
-        p.get
+        # r=Player()
+        # r.get
+        cards = [
+                                             {
+                                                 "rank": "6",
+                                                 "suit": "hearts"
+                                             },
+                                             {
+                                                 "rank": "K",
+                                                 "suit": "spades"
+                                             },
+                                             {
+                                                 "rank": "A",
+                                                 "suit": "spades"
+                                             },
+                                             {
+                                                 "rank": "Q",
+                                                 "suit": "hearts"
+                                             },
+                                             {
+                                                 "rank": "6",
+                                                 "suit": "clubs"
+                                             }
+        ]
+        r=Ranking(cards)
+        self.assertEqual(1, r.getRanking())
+
+        cards = [
+                                             {
+                                                 "rank": "6",
+                                                 "suit": "hearts"
+                                             },
+                                             {
+                                                 "rank": "K",
+                                                 "suit": "spades"
+                                             },
+                                             {
+                                                 "rank": "A",
+                                                 "suit": "spades"
+                                             },
+                                             {
+                                                 "rank": "A",
+                                                 "suit": "hearts"
+                                             },
+                                             {
+                                                 "rank": "6",
+                                                 "suit": "clubs"
+                                             }
+        ]
+        r=Ranking(cards)
+        self.assertEqual(2, r.getRanking())
+
+        cards = [
+                                             {
+                                                 "rank": "6",
+                                                 "suit": "hearts"
+                                             },
+                                             {
+                                                 "rank": "K",
+                                                 "suit": "spades"
+                                             },
+                                             {
+                                                 "rank": "6",
+                                                 "suit": "spades"
+                                             },
+                                             {
+                                                 "rank": "A",
+                                                 "suit": "hearts"
+                                             },
+                                             {
+                                                 "rank": "6",
+                                                 "suit": "clubs"
+                                             }
+        ]
+        r=Ranking(cards)
+        self.assertEqual(3, r.getRanking())
+
+        cards = [
+                                             {
+                                                 "rank": "10",
+                                                 "suit": "spades"
+                                             },
+                                             {
+                                                 "rank": "8",
+                                                 "suit": "diamonds"
+                                             },
+                                             {
+                                                 "rank": "J",
+                                                 "suit": "hearts"
+                                             },
+                                             {
+                                                 "rank": "9",
+                                                 "suit": "spades"
+                                             },
+                                             {
+                                                 "rank": "Q",
+                                                 "suit": "clubs"
+                                             }
+        ]
+        r=Ranking(cards)
+        self.assertEqual(4, r.getRanking())
+
+        cards = [
+                                             {
+                                                 "rank": "5",
+                                                 "suit": "diamonds"
+                                             },
+                                             {
+                                                 "rank": "2",
+                                                 "suit": "diamonds"
+                                             },
+                                             {
+                                                 "rank": "7",
+                                                 "suit": "diamonds"
+                                             },
+                                             {
+                                                 "rank": "8",
+                                                 "suit": "clubs"
+                                             },
+                                             {
+                                                 "rank": "8",
+                                                 "suit": "diamonds"
+                                             },
+                                             {
+                                                 "rank": "J",
+                                                 "suit": "diamonds"
+                                             }
+        ]
+        r=Ranking(cards)
+        self.assertEqual(5, r.getRanking())
+
+        cards = [
+                                             {
+                                                 "rank": "6",
+                                                 "suit": "hearts"
+                                             },
+                                             {
+                                                 "rank": "A",
+                                                 "suit": "spades"
+                                             },
+                                             {
+                                                 "rank": "6",
+                                                 "suit": "spades"
+                                             },
+                                             {
+                                                 "rank": "A",
+                                                 "suit": "hearts"
+                                             },
+                                             {
+                                                 "rank": "6",
+                                                 "suit": "clubs"
+                                             }
+        ]
+        r=Ranking(cards)
+        self.assertEqual(6, r.getRanking())
+
+        cards = [
+                                             {
+                                                 "rank": "A",
+                                                 "suit": "diamonds"
+                                             },
+                                             {
+                                                 "rank": "A",
+                                                 "suit": "spades"
+                                             },
+                                             {
+                                                 "rank": "6",
+                                                 "suit": "spades"
+                                             },
+                                             {
+                                                 "rank": "A",
+                                                 "suit": "hearts"
+                                             },
+                                             {
+                                                 "rank": "A",
+                                                 "suit": "clubs"
+                                             }
+        ]
+        r=Ranking(cards)
+        self.assertEqual(7, r.getRanking())
+
+        cards = [
+                                             {
+                                                 "rank": "8",
+                                                 "suit": "spades"
+                                             },
+                                             {
+                                                 "rank": "J",
+                                                 "suit": "spades"
+                                             },
+                                             {
+                                                 "rank": "Q",
+                                                 "suit": "spades"
+                                             },
+                                             {
+                                                 "rank": "10",
+                                                 "suit": "spades"
+                                             },
+                                             {
+                                                 "rank": "9",
+                                                 "suit": "spades"
+                                             }
+        ]
+        r=Ranking(cards)
+        self.assertEqual(8, r.getRanking())
 
 if __name__ == '__main__':
     unittest.main()

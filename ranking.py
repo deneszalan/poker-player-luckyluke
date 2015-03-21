@@ -93,10 +93,6 @@ class Ranking():
     def hasFlush(self):
         return 5 in self._suits.values() or 6 in self._suits.values() or 7 in self._suits.values()
 
-    # @classmethod
-    # def hasFlush(cls, ):
-    #     return 5 in self._suits.values() or 6 in self._suits.values() or 7 in self._suits.values()
-
     def hasStraight(self):
         cards = sorted(self._cards, cmp=cmpValue)
         values = getValues(cards)
@@ -109,20 +105,19 @@ class Ranking():
         return False
 
     def hasStraightFlush(self):
-        retval = False
+        result = False
         for j in range(len(self._cards)-4):
-            cards2check = self._cards[j:j+5]
-            ranks, suits = Ranking._computeRanksAndSuits(cards2check)
-            if self.hasFlush() and self.hasStraight(cards2check):
-                retval = True
+            r5=Ranking(self._cards[j:j+5])
+            if r5.hasFlush() and r5.hasStraight():
+                result = True
                 break
-        return retval
+        return result
 
     def getRanking(self):
         # if len(self._cards)<5:
         #     return 0
-        # if self.hasStraightFlush():
-        #     return 8
+        if self.hasStraightFlush():
+            return 8
         if self.hasPoker():
             return 7
         if self.hasFull():
