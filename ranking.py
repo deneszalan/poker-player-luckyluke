@@ -9,7 +9,7 @@ class Ranking():
         for i in xrange(2,11):
             self._rank2chenvalue[str(i)] = i/2.0
             self._rank2value[str(i)] = i
-        print self._rank2chenvalue
+        #print self._rank2chenvalue
 
     def get_chen_ranking(self):
 
