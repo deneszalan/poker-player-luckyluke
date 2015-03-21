@@ -264,5 +264,9 @@ class RankSuite(unittest.TestCase):
         ]
         self.assertTrue(p.hasStraight(cards3))
 
+    def testRanking(self):
+        p=Player()
+        p.get
+
 if __name__ == '__main__':
     unittest.main()

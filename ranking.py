@@ -1,5 +1,15 @@
 #!/usr/bin/env python
 
+STRAIGHT_VALUES = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
+
+def cmpValue(a, b):
+    return STRAIGHT_VALUES.index(a["rank"])-STRAIGHT_VALUES.index(b["rank"])
+
+def getValues(cards):
+    result = []
+    for card in cards:
+        result += [card["rank"]]
+    return result
 
 class Ranking():
     def __init__(self, cards):
@@ -9,7 +19,7 @@ class Ranking():
         for i in xrange(2,11):
             self._rank2chenvalue[str(i)] = i/2.0
             self._rank2value[str(i)] = i
-        #print self._rank2chenvalue
+        self._ranks, self._suits = Ranking._computeRanksAndSuits(self._cards)
 
     def get_chen_ranking(self):
 
@@ -54,18 +64,105 @@ class Ranking():
 
         return chen
 
+    @classmethod
+    def _computeRanksAndSuits(cls, cards):
+        ranks = dict()
+        suits = dict()
+        for card in cards:
+            rank = card["rank"]
+            suit = card["suit"]
+            ranks[rank] = ranks.get(rank, 0) + 1
+            suits[suit] = suits.get(suit, 0) + 1
+        return ranks, suits
+
+    def hasPair(self):
+        return 2 in self._ranks.values()
+
+    def hasTwoPairs(self):
+        return 2 == self._ranks.values().count(2)
+
+    def hasDrill(self):
+        return 3 in self._ranks.values()
+
+    def hasPoker(self):
+        return 4 in self._ranks.values()
+
+    def hasFull(self):
+        return (2 in self._ranks.values()) and (3 in self._ranks.values())
+
+    def hasFlush(self):
+        return 5 in self._suits.values() or 6 in self._suits.values() or 7 in self._suits.values()
+
+    # @classmethod
+    # def hasFlush(cls, ):
+    #     return 5 in self._suits.values() or 6 in self._suits.values() or 7 in self._suits.values()
+
+    def hasStraight(self):
+        cards = sorted(self._cards, cmp=cmpValue)
+        values = getValues(cards)
+        # print cards
+        for j in range(len(cards)-4):
+            i = STRAIGHT_VALUES.index(values[j])
+            straight = STRAIGHT_VALUES[i:i+5]
+            if values[j:j+5] == straight:
+                return True
+        return False
+
+    def hasStraightFlush(self):
+        retval = False
+        for j in range(len(self._cards)-4):
+            cards2check = self._cards[j:j+5]
+            ranks, suits = Ranking._computeRanksAndSuits(cards2check)
+            if self.hasFlush() and self.hasStraight(cards2check):
+                retval = True
+                break
+        return retval
+
+    def getRanking(self):
+        # if len(self._cards)<5:
+        #     return 0
+        # if self.hasStraightFlush():
+        #     return 8
+        if self.hasPoker():
+            return 7
+        if self.hasFull():
+            return 6
+        if self.hasFlush():
+            return 5
+        if self.hasStraight():
+            return 4
+        if self.hasDrill():
+            return 3
+        if self.hasTwoPairs():
+            return 2
+        if self.hasPair():
+            return 1
+        return 0
+
 if __name__ == "__main__":
-    cards = [{
+    cards = [       {
                         "rank": "7",                    # Rank of the card. Possible values are numbers 2-10 and J,Q,K,A
                         "suit": "hearts"                # Suit of the card. Possible values are: clubs,spades,hearts,diamonds
                     },
                     {
-                        "rank": "6",
+                        "rank": "7",                    # Rank of the card. Possible values are numbers 2-10 and J,Q,K,A
+                        "suit": "hearts"                # Suit of the card. Possible values are: clubs,spades,hearts,diamonds
+                    },
+                    {
+                        "rank": "7",                    # Rank of the card. Possible values are numbers 2-10 and J,Q,K,A
+                        "suit": "hearts"                # Suit of the card. Possible values are: clubs,spades,hearts,diamonds
+                    },
+                    {
+                        "rank": "K",                    # Rank of the card. Possible values are numbers 2-10 and J,Q,K,A
+                        "suit": "hearts"                # Suit of the card. Possible values are: clubs,spades,hearts,diamonds
+                    },
+                    {
+                        "rank": "K",
                         "suit": "spades"
                     }
                   ]
     r = Ranking(cards)
 
 
-    rank = r.get_chen_ranking()
+    rank = r.getRanking()
     print rank
