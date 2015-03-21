@@ -139,6 +139,10 @@ class Ranking():
             return 1
         return 0
 
+    def highest_card_value(self):
+        values = [self._rank2value[c["rank"]] for c in self._cards]
+        pass
+
 if __name__ == "__main__":
     cards = [       {
                         "rank": "2",                    # Rank of the card. Possible values are numbers 2-10 and J,Q,K,A
@@ -165,4 +169,5 @@ if __name__ == "__main__":
 
 
     rank = r.getRanking()
-    print rank
+    #print rank
+    print r.highest_card_value()

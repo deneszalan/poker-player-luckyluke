@@ -11,16 +11,17 @@ class Player():
 
         try:
             myself = game_state["players"][game_state["in_action"]]
-            my_cards = myself["hole_cards"]
-            desk_cards = game_state["community_cards"]
-            all_cards = my_cards + desk_cards
+            cards_hand = myself["hole_cards"]
+            cards_desk = game_state["community_cards"]
+            cards_all = cards_hand + cards_desk
             all_my_money = int(myself["stack"])
 
-            ranking_service = Ranking(all_cards)
+            ranking_service_all_cards = Ranking(cards_all)
+            ranking_service_hand = Ranking(cards_hand)
 
-            #ranking = Ranking(my_cards)
-            chen_ranking = ranking_service.get_chen_ranking()
-            ranking = ranking_service.getRanking()
+            #ranking = Ranking(cards_hand)
+            chen_ranking = ranking_service_all_cards.get_chen_ranking()
+            ranking = ranking_service_all_cards.getRanking()
 
             is_preflop = len(game_state["community_cards"]) == 0
             active_player_count = len(filter(lambda player: player["status"] == "active", game_state["players"]))
@@ -49,7 +50,7 @@ class Player():
                         bet = all_in_value
 
                 if not did_somebody_raise:
-                    bet = minimum_raise * 2 + 1
+                    bet = minimum_raise * 2
 
             else:
                 TWO_PAIRS = 2
@@ -57,6 +58,8 @@ class Player():
                     bet = 0
                 elif ranking == 1:
                     bet = 2 * small_blind
+                    # desk_card_values = [c for c in cards_desk]
+                    # largest_desk_card_value = m
                 elif ranking >= TWO_PAIRS:
                     bet = all_in_value
                 #out_player_count =
