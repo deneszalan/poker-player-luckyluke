@@ -50,7 +50,7 @@ class RankSuite(unittest.TestCase):
                     "bet": 0
                 }
             ],
-            "community_cards": [                            # Finally the array of community cards.
+            "community_cards": [
                 {
                     "rank": "4",
                     "suit": "spades"
@@ -69,10 +69,10 @@ class RankSuite(unittest.TestCase):
         p.betRequest(gameState)
 
     def testPairs(self):
-        cards = [                            # Finally the array of community cards.
+        cards = [
                                              {
-                                                 "rank": "6",                    # Rank of the card. Possible values are numbers 2-10 and J,Q,K,A
-                                                 "suit": "hearts"                # Suit of the card. Possible values are: clubs,spades,hearts,diamonds
+                                                 "rank": "6",
+                                                 "suit": "hearts"
                                              },
                                              {
                                                  "rank": "K",
@@ -94,16 +94,16 @@ class RankSuite(unittest.TestCase):
         p=Player()
         ranks, suits = p.getCardSorts(cards)
         self.assertTrue(p.hasPair(ranks))
-        self.assertTrue(p.twoPairs(ranks))
+        self.assertTrue(p.hasTwoPairs(ranks))
         self.assertFalse(p.hasDrill(ranks))
         self.assertFalse(p.hasFull(ranks))
         self.assertFalse(p.hasPoker(ranks))
 
     def testDrill(self):
-        cards = [                            # Finally the array of community cards.
+        cards = [
                                              {
-                                                 "rank": "6",                    # Rank of the card. Possible values are numbers 2-10 and J,Q,K,A
-                                                 "suit": "hearts"                # Suit of the card. Possible values are: clubs,spades,hearts,diamonds
+                                                 "rank": "6",
+                                                 "suit": "hearts"
                                              },
                                              {
                                                  "rank": "A",
@@ -125,16 +125,16 @@ class RankSuite(unittest.TestCase):
         p=Player()
         ranks, suits = p.getCardSorts(cards)
         self.assertTrue(p.hasPair(ranks))
-        self.assertFalse(p.twoPairs(ranks))
+        self.assertFalse(p.hasTwoPairs(ranks))
         self.assertTrue(p.hasDrill(ranks))
         self.assertTrue(p.hasFull(ranks))
         self.assertFalse(p.hasPoker(ranks))
 
     def testPoker(self):
-        cards = [                            # Finally the array of community cards.
+        cards = [
                                              {
-                                                 "rank": "A",                    # Rank of the card. Possible values are numbers 2-10 and J,Q,K,A
-                                                 "suit": "diamonds"              # Suit of the card. Possible values are: clubs,spades,hearts,diamonds
+                                                 "rank": "A",
+                                                 "suit": "diamonds"
                                              },
                                              {
                                                  "rank": "A",
@@ -156,16 +156,16 @@ class RankSuite(unittest.TestCase):
         p=Player()
         ranks, suits = p.getCardSorts(cards)
         self.assertFalse(p.hasPair(ranks))
-        self.assertFalse(p.twoPairs(ranks))
+        self.assertFalse(p.hasTwoPairs(ranks))
         self.assertFalse(p.hasDrill(ranks))
         self.assertFalse(p.hasFull(ranks))
         self.assertTrue(p.hasPoker(ranks))
 
     def testStraight(self):
-        cards1 = [                            # Finally the array of community cards.
+        cards1 = [
                                              {
-                                                 "rank": "5",                    # Rank of the card. Possible values are numbers 2-10 and J,Q,K,A
-                                                 "suit": "diamonds"              # Suit of the card. Possible values are: clubs,spades,hearts,diamonds
+                                                 "rank": "5",
+                                                 "suit": "diamonds"
                                              },
                                              {
                                                  "rank": "6",
@@ -184,10 +184,12 @@ class RankSuite(unittest.TestCase):
                                                  "suit": "clubs"
                                              }
         ]
-        cards2 = [                            # Finally the array of community cards.
+        p=Player()
+        self.assertFalse(p.hasStraight(cards1))
+        cards2 = [
                                              {
-                                                 "rank": "8",                    # Rank of the card. Possible values are numbers 2-10 and J,Q,K,A
-                                                 "suit": "diamonds"              # Suit of the card. Possible values are: clubs,spades,hearts,diamonds
+                                                 "rank": "8",
+                                                 "suit": "diamonds"
                                              },
                                              {
                                                  "rank": "9",
@@ -206,9 +208,61 @@ class RankSuite(unittest.TestCase):
                                                  "suit": "clubs"
                                              }
         ]
-        p=Player()
-        self.assertFalse(p.hasStraight(cards1))
         self.assertTrue(p.hasStraight(cards2))
+        cards3 = [
+                                             {
+                                                 "rank": "6",
+                                                 "suit": "spades"
+                                             },
+                                             {
+                                                 "rank": "7",
+                                                 "suit": "hearts"
+                                             },
+                                             {
+                                                 "rank": "2",
+                                                 "suit": "diamonds"
+                                             },
+                                             {
+                                                 "rank": "5",
+                                                 "suit": "spades"
+                                             },
+                                             {
+                                                 "rank": "8",
+                                                 "suit": "clubs"
+                                             },
+                                             {
+                                                 "rank": "9",
+                                                 "suit": "clubs"
+                                             }
+        ]
+        self.assertTrue(p.hasStraight(cards3))
+        cards3 = [
+                                             {
+                                                 "rank": "K",
+                                                 "suit": "clubs"
+                                             },
+                                             {
+                                                 "rank": "10",
+                                                 "suit": "spades"
+                                             },
+                                             {
+                                                 "rank": "Q",
+                                                 "suit": "hearts"
+                                             },
+                                             {
+                                                 "rank": "J",
+                                                 "suit": "spades"
+                                             },
+                                             {
+                                                 "rank": "9",
+                                                 "suit": "diamonds"
+                                             },
+                                             {
+                                                 "rank": "7",
+                                                 "suit": "clubs"
+                                             }
+        ]
+        self.assertTrue(p.hasStraight(cards3))
 
 if __name__ == '__main__':
     unittest.main()

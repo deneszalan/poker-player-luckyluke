@@ -1,7 +1,16 @@
 #!/usr/bin/env python
 from ranking import Ranking
 
-STRAIGHT_CARDS = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
+STRAIGHT_VALUES = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
+
+def cmpValue(a, b):
+    return STRAIGHT_VALUES.index(a["rank"])-STRAIGHT_VALUES.index(b["rank"])
+
+def getValues(cards):
+    result = []
+    for card in cards:
+        result += [card["rank"]]
+    return result
 
 class Player():
     VERSION = "All-in 1"
@@ -28,15 +37,15 @@ class Player():
             else:
                 suits[card["suit"]]+=1
 
-        print allcards
-        print ranks
-        print suits
+        # print allcards
+        # print ranks
+        # print suits
         return (ranks, suits)
 
     def hasPair(self, ranks):
         return 2 in ranks.values()
 
-    def twoPairs(self, ranks):
+    def hasTwoPairs(self, ranks):
         counts=ranks.values()
         return 2 == counts.count(2)
 
@@ -53,17 +62,50 @@ class Player():
         return 5 in suits.values() or 6 in suits.values() or 7 in suits.values()
 
     def hasStraight(self, cards):
+        cards = sorted(cards, cmp=cmpValue)
+        values = getValues(cards)
+        # print cards
         for j in range(len(cards)-4):
-            i = STRAIGHT_CARDS.index(cards[j]["rank"])
-            straight = STRAIGHT_CARDS[i:i+5]
-            if cards[j:j+5] == straight:
+            i = STRAIGHT_VALUES.index(values[j])
+            straight = STRAIGHT_VALUES[i:i+5]
+            if values[j:j+5] == straight:
                 return True
         return False
+
+    def hasStraightFlush(self, cards):
+        for j in range(len(cards)-4):
+            cards2check = cards[j:j+5]
+            if self.hasFlush(cards2check) and self.hasStraight(cards2check):
+                return True
+        return False
+
+    # def sort(self, cards):
+    #     for i in range(len(cards)-1):
+    #         for j in range(i+1, len(cards)):
+    #             if (cards[i]["rank"]>cards[j]["rank"]):
+    #                 card = cards[i]
+    #                 cards[i] = cards[j]
+    #                 cards[j] = card
 
     def getRank(self, allcards, ranks, suits):
         if len(allcards)!=5:
             return 0
-
+        if self.hasStraightFlush(allcards):
+            return 8
+        if self.hasPoker(allcards):
+            return 7
+        if self.hasFull(allcards):
+            return 6
+        if self.hasFlush(allcards):
+            return 5
+        if self.hasStraight(allcards):
+            return 4
+        if self.hasDrill(allcards):
+            return 3
+        if self.hasTwoPairs(allcards):
+            return 2
+        if self.hasPair(allcards):
+            return 1
         return 0
 
     def betRequest(self, game_state):
