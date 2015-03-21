@@ -7,18 +7,29 @@ class Player():
 
     def betRequest(self, game_state):
         bet = 0
+        all_my_money = 0
 
         try:
             myself = game_state["players"][game_state["in_action"]]
             my_cards = myself["hole_cards"]
+            desk_cards = game_state["community_cards"]
+            all_cards = my_cards + desk_cards
+            all_my_money = int(myself["stack"])
 
-            ranking = Ranking(my_cards)
-            chen_ranking = ranking.get_chen_ranking()
+            ranking_service = Ranking(all_cards)
+
+            #ranking = Ranking(my_cards)
+            chen_ranking = ranking_service.get_chen_ranking()
+            ranking = ranking_service.getRanking()
 
             is_preflop = len(game_state["community_cards"]) == 0
             active_player_count = len(filter(lambda player: player["status"] == "active", game_state["players"]))
 
             all_in_value = myself["stack"]
+            minimum_raise = int(game_state["minimum_raise"])
+            small_blind = int(game_state["small_blind"])
+
+
 
             if is_preflop:
                 if active_player_count == 2:
@@ -31,9 +42,6 @@ class Player():
                     if chen_ranking >= 6:
                         bet = all_in_value
 
-                minimum_raise = int(game_state["minimum_raise"])
-                small_blind = int(game_state["small_blind"])
-
                 did_somebody_raise = minimum_raise >= small_blind * 3
 
                 if minimum_raise > small_blind*8:
@@ -44,16 +52,83 @@ class Player():
                     bet = minimum_raise * 2 + 1
 
             else:
+                TWO_PAIRS = 2
+                if ranking == 0:
+                    bet = 0
+                elif ranking == 1:
+                    bet = 2 * small_blind
+                elif ranking >= TWO_PAIRS:
+                    bet = all_in_value
                 #out_player_count =
-                bet = max(100, int(game_state["minimum_raise"]))
+                #bet = max(100, int(game_state["minimum_raise"]))
         except:
             print "Meghaltam :("
 
-        return int(bet)
+        return int(min(bet, all_my_money))
 
 
     def showdown(self, game_state):
         pass
 
 if __name__ == "__main__":
-    pass
+    p = Player()
+    game_state = {
+            "small_blind": 10,
+            "current_buy_in": 320,
+            "pot": 400,
+            "minimum_raise": 240,
+            "dealer": 1,
+            "orbits": 7,
+            "in_action": 1,
+            "players": [
+                {
+                    "id": 0,
+                    "name": "Albert",
+                    "status": "active",
+                    "version": "Default random player",
+                    "stack": 1010,                          # Amount of chips still available for the player. (Not including
+                    "bet": 320                              # The amount of chips the player put into the pot
+                },
+                {
+                    "id": 1,                                # Your own player looks similar, with one extension.
+                    "name": "Bob",
+                    "status": "active",
+                    "version": "Default random player",
+                    "stack": 1590,
+                    "bet": 80,
+                    "hole_cards": [                         # The cards of the player. This is only visible for your own player
+                        {
+                            "rank": "6",                    # Rank of the card. Possible values are numbers 2-10 and J,Q,K,A
+                            "suit": "hearts"                # Suit of the card. Possible values are: clubs,spades,hearts,diamonds
+                        },
+                        {
+                            "rank": "K",
+                            "suit": "spades"
+                        }
+                    ]
+                },
+                {
+                    "id": 2,
+                    "name": "Chuck",
+                    "status": "out",
+                    "version": "Default random player",
+                    "stack": 0,
+                    "bet": 0
+                }
+            ],
+            "community_cards": [
+                {
+                    "rank": "4",
+                    "suit": "spades"
+                },
+                {
+                    "rank": "A",
+                    "suit": "hearts"
+                },
+                {
+                    "rank": "6",
+                    "suit": "clubs"
+                }
+            ]
+        }
+    print p.betRequest(game_state)

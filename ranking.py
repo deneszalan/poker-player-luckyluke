@@ -141,19 +141,19 @@ class Ranking():
 
 if __name__ == "__main__":
     cards = [       {
-                        "rank": "7",                    # Rank of the card. Possible values are numbers 2-10 and J,Q,K,A
+                        "rank": "2",                    # Rank of the card. Possible values are numbers 2-10 and J,Q,K,A
                         "suit": "hearts"                # Suit of the card. Possible values are: clubs,spades,hearts,diamonds
                     },
                     {
-                        "rank": "7",                    # Rank of the card. Possible values are numbers 2-10 and J,Q,K,A
+                        "rank": "4",                    # Rank of the card. Possible values are numbers 2-10 and J,Q,K,A
                         "suit": "hearts"                # Suit of the card. Possible values are: clubs,spades,hearts,diamonds
                     },
                     {
-                        "rank": "7",                    # Rank of the card. Possible values are numbers 2-10 and J,Q,K,A
+                        "rank": "6",                    # Rank of the card. Possible values are numbers 2-10 and J,Q,K,A
                         "suit": "hearts"                # Suit of the card. Possible values are: clubs,spades,hearts,diamonds
                     },
                     {
-                        "rank": "K",                    # Rank of the card. Possible values are numbers 2-10 and J,Q,K,A
+                        "rank": "8",                    # Rank of the card. Possible values are numbers 2-10 and J,Q,K,A
                         "suit": "hearts"                # Suit of the card. Possible values are: clubs,spades,hearts,diamonds
                     },
                     {
